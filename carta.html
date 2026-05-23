@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Una carta para ti 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #87ceeb 0%, #b0e0f5 40%, #d4f0ff 70%, #e8f8ff 100%);
+    font-family: 'Lora', serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* SKY SCENE */
+  .sky {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* CLOUDS */
+  .cloud {
+    position: absolute;
+    background: white;
+    border-radius: 50px;
+    opacity: 0.88;
+    filter: drop-shadow(0 4px 12px rgba(255,255,255,0.6));
+    animation: floatCloud linear infinite;
+  }
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+  }
+  .cloud-1 { width:160px; height:50px; top:8%; animation-duration:40s; animation-delay:-5s; }
+  .cloud-1::before { width:80px; height:70px; top:-35px; left:20px; }
+  .cloud-1::after  { width:60px; height:55px; top:-25px; left:70px; }
+
+  .cloud-2 { width:220px; height:60px; top:18%; animation-duration:55s; animation-delay:-20s; opacity:0.7; }
+  .cloud-2::before { width:100px; height:80px; top:-40px; left:30px; }
+  .cloud-2::after  { width:80px;  height:65px; top:-30px; left:100px; }
+
+  .cloud-3 { width:130px; height:40px; top:30%; animation-duration:35s; animation-delay:-10s; opacity:0.75; }
+  .cloud-3::before { width:65px; height:55px; top:-28px; left:15px; }
+  .cloud-3::after  { width:50px; height:45px; top:-20px; left:55px; }
+
+  .cloud-4 { width:180px; height:55px; top:5%; animation-duration:48s; animation-delay:-30s; opacity:0.65; }
+  .cloud-4::before { width:90px; height:72px; top:-36px; left:25px; }
+  .cloud-4::after  { width:70px; height:58px; top:-26px; left:85px; }
+
+  .cloud-5 { width:100px; height:35px; top:22%; animation-duration:30s; animation-delay:-15s; opacity:0.8; }
+  .cloud-5::before { width:50px; height:45px; top:-22px; left:12px; }
+  .cloud-5::after  { width:40px; height:36px; top:-16px; left:45px; }
+
+  @keyframes floatCloud {
+    from { transform: translateX(-350px); }
+    to   { transform: translateX(calc(100vw + 350px)); }
+  }
+
+  /* FALLING SUNFLOWERS */
+  .sunflower {
+    position: fixed;
+    font-size: 28px;
+    animation: fallDown linear infinite;
+    pointer-events: none;
+    z-index: 1;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  }
+  @keyframes fallDown {
+    0%   { transform: translateY(-60px) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ANIMALS */
+  .animal {
+    position: fixed;
+    font-size: 32px;
+    pointer-events: none;
+    z-index: 1;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+  }
+  .animal-fly {
+    animation: flyAcross linear infinite;
+  }
+  .animal-bounce {
+    animation: bounceCross linear infinite;
+  }
+  @keyframes flyAcross {
+    0%   { transform: translateX(-80px) translateY(0px); opacity: 0; }
+    5%   { opacity: 1; }
+    50%  { transform: translateX(50vw) translateY(-30px); }
+    95%  { opacity: 1; }
+    100% { transform: translateX(calc(100vw + 80px)) translateY(10px); opacity: 0; }
+  }
+  @keyframes bounceCross {
+    0%   { transform: translateX(-80px) translateY(0px) scaleX(-1); opacity: 0; }
+    5%   { opacity: 1; }
+    25%  { transform: translateX(25vw) translateY(-20px) scaleX(-1); }
+    50%  { transform: translateX(50vw) translateY(0px) scaleX(-1); }
+    75%  { transform: translateX(75vw) translateY(-15px) scaleX(-1); }
+    95%  { opacity: 1; }
+    100% { transform: translateX(calc(100vw + 80px)) translateY(0px) scaleX(-1); opacity: 0; }
+  }
+
+  /* ENVELOPE SCENE */
+  .scene {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .title-top {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: #1a4a6e;
+    text-shadow: 0 2px 8px rgba(255,255,255,0.9);
+    margin-bottom: 40px;
+    text-align: center;
+    animation: fadeInDown 1.2s ease forwards;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ENVELOPE */
+  .envelope-wrap {
+    perspective: 800px;
+  }
+
+  .envelope {
+    position: relative;
+    width: min(340px, 90vw);
+    cursor: pointer;
+    animation: fadeInUp 1.4s ease forwards;
+    filter: drop-shadow(0 20px 40px rgba(26,74,110,0.25));
+    transition: transform 0.3s ease;
+  }
+  .envelope:hover { transform: scale(1.03) translateY(-4px); }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .envelope svg { width: 100%; height: auto; display: block; }
+
+  .open-hint {
+    margin-top: 18px;
+    font-family: 'Pacifico', cursive;
+    font-size: 1.3rem;
+    color: #1a6ea0;
+    text-shadow: 0 1px 6px rgba(255,255,255,0.9);
+    animation: pulse 2s ease-in-out infinite;
+    text-align: center;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.6; transform: scale(0.97); }
+  }
+
+  /* LETTER MODAL */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 50, 90, 0.45);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+  .overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .letter-paper {
+    background: linear-gradient(160deg, #fffdf5 0%, #fff8e8 100%);
+    border-radius: 4px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 50px 44px 44px;
+    position: relative;
+    box-shadow:
+      0 4px 0 #e8d9a0,
+      0 8px 0 #d4c78a,
+      0 30px 80px rgba(10,50,90,0.3),
+      inset 0 0 60px rgba(255,240,190,0.4);
+    transform: translateY(40px) scale(0.96);
+    transition: transform 0.5s cubic-bezier(.22,1,.36,1), opacity 0.5s ease;
+    opacity: 0;
+    /* lined paper effect */
+    background-image:
+      linear-gradient(160deg, #fffdf5 0%, #fff8e8 100%),
+      repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        #e8d5a0 31px,
+        #e8d5a0 32px
+      );
+    background-blend-mode: multiply;
+    line-height: 32px;
+  }
+  .overlay.open .letter-paper {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .letter-paper::-webkit-scrollbar { width: 6px; }
+  .letter-paper::-webkit-scrollbar-track { background: transparent; }
+  .letter-paper::-webkit-scrollbar-thumb { background: #d4b870; border-radius: 3px; }
+
+  /* Red margin line */
+  .letter-paper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 80px; bottom: 0;
+    width: 1px;
+    background: rgba(220, 100, 100, 0.35);
+  }
+
+  .letter-close {
+    position: absolute;
+    top: 14px; right: 18px;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    color: #8a7040;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s, transform 0.2s;
+    z-index: 5;
+  }
+  .letter-close:hover { color: #4a3010; transform: rotate(90deg); }
+
+  .letter-deco-top {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    margin-left: 40px;
+  }
+
+  .letter-body {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(1rem, 2.2vw, 1.13rem);
+    font-weight: 500;
+    color: #2c1a00;
+    line-height: 32px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-left: 40px;
+    letter-spacing: 0.01em;
+  }
+
+  .letter-footer {
+    text-align: center;
+    margin-top: 28px;
+    margin-left: 40px;
+    font-size: 1.8rem;
+  }
+
+  /* SPARKLE on open */
+  @keyframes sparkle {
+    0%   { opacity: 0; transform: scale(0) rotate(0deg); }
+    50%  { opacity: 1; transform: scale(1.5) rotate(180deg); }
+    100% { opacity: 0; transform: scale(0) rotate(360deg); }
+  }
+  .sparkle-burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 200;
+    font-size: 24px;
+    animation: sparkle 0.9s ease forwards;
+  }
+</style>
+</head>
+<body>
+
+<!-- SKY ELEMENTS -->
+<div class="sky">
+  <div class="cloud cloud-1" style="left:-200px"></div>
+  <div class="cloud cloud-2" style="left:-300px"></div>
+  <div class="cloud cloud-3" style="left:-160px"></div>
+  <div class="cloud cloud-4" style="left:-250px"></div>
+  <div class="cloud cloud-5" style="left:-130px"></div>
+</div>
+
+<!-- OVERLAY / LETTER -->
+<div class="overlay" id="overlay">
+  <div class="letter-paper" id="letterPaper">
+    <button class="letter-close" onclick="closeLetter()" title="Cerrar">✕</button>
+    <div class="letter-deco-top">🌻 💌 🌻</div>
+    <div class="letter-body" id="letterBody"></div>
+    <div class="letter-footer">🌸 🦋 🌸</div>
+  </div>
+</div>
+
+<!-- MAIN SCENE -->
+<div class="scene">
+  <div class="title-top">Una carta para ti… 💌</div>
+
+  <div class="envelope-wrap">
+    <div class="envelope" id="envelope" onclick="openLetter(event)">
+      <svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- envelope body -->
+        <rect x="4" y="30" width="332" height="186" rx="8" fill="#fff8e1" stroke="#e0c97a" stroke-width="2.5"/>
+        <!-- back flap lines -->
+        <polyline points="4,216 170,110 336,216" fill="none" stroke="#e0c97a" stroke-width="1.5" opacity="0.5"/>
+        <polyline points="4,30 170,130 336,30" fill="none" stroke="#d4b060" stroke-width="1.5" opacity="0.4"/>
+        <!-- seal area -->
+        <ellipse cx="170" cy="130" rx="28" ry="22" fill="#f7c948" opacity="0.35"/>
+        <!-- top flap -->
+        <polygon points="4,30 170,130 336,30" fill="#f9e87a" stroke="#e0c97a" stroke-width="2"/>
+        <!-- flap shadow -->
+        <polygon points="100,30 170,90 240,30" fill="#f0d640" opacity="0.3"/>
+        <!-- wax seal -->
+        <circle cx="170" cy="115" r="22" fill="#e63946" opacity="0.92" stroke="#b02030" stroke-width="1.5"/>
+        <text x="170" y="121" font-size="18" text-anchor="middle" fill="white" font-family="serif">💕</text>
+        <!-- little sunflower decorations -->
+        <text x="40"  y="190" font-size="22">🌻</text>
+        <text x="278" y="190" font-size="22">🌻</text>
+        <text x="40"  y="60"  font-size="14">✨</text>
+        <text x="295" y="60"  font-size="14">✨</text>
+      </svg>
+    </div>
+    <p class="open-hint">✨ Toca para abrir la carta ✨</p>
+  </div>
+</div>
+
+<script>
+const letterText = `Hola.
+
+No sé ni por qué lo hago, pero aun así quiero que lo sepas. No es para reprocharte nada, ni para pedirte algo a cambio; solo quiero explicarte el porqué de mis actitudes.
+
+Al principio todo fue tan bonito. Tu forma de hablar y de hacerme sentir especial. Lograste ganarte mi corazón poco a poco, sin apuros, sin forzar nada; y sin darte cuenta, ya lo tenías completo. Me ilusioné. Le creí a mis sentimientos antes que a la mente, y más que a la razón. Me enamoré cuando no debía, cuando no podía, y sabiendo perfectamente a lo que me exponía.
+
+Pero con el tiempo las cosas cambiaron. Los malentendidos y la desconfianza construyeron un muro entre nosotros. Bueno, sí, decidimos volver a intentarlo, y yo lo hice: di lo mejor de mí, lo mejor que pude. Me aferré a la esperanza de que sí podía ser diferente, y por un momento pensé que sí. Hasta que me ganaron mis sentimientos. No fue una falla pequeña; fue algo que me rompió. Y lo más confuso de todo es que, a pesar de eso, creo que todavía te quiero. Y no lo digo con orgullo, lo digo con dolor, con la voz bajita, porque sé que no debería sentirlo... pero lo siento. El amor no se apaga así de la nada.
+
+Quiero que sepas que no quería que las cosas se pusieran así entre nosotros. Fueron días increíbles. Gracias por haberme hecho feliz y por estar para mí cuando te necesité. Quizás ahora todo esté confuso, pero daría todo para que esto hubiera sido diferente. Me enseñaste tanto y compartimos mucho entre risas y tristezas, pero siempre estuvimos apoyándonos. Te agradezco por haber compartido momentos de tu vida conmigo. Espero ser un bonito recuerdo para ti, como tú siempre lo serás para mí.
+
+Sabes que eres una excelente persona y siempre me lo demostraste. Sigue trabajando y cumpliendo tus sueños. Siempre me sentiré feliz de verte lograr cada una de las metas que te propongas. Algún día sé que lo lograrás, no te rindas, tú eres fuerte. Siempre me sentiré orgulloso de ti.
+
+Quería agradecerte por todo, me acuerdo de las caricias,Tus chistes y ese sentido del humor que tienes ajajajaja es unco despues de todo, de tus bonitos consejos, de tu forma de ser y de cómo me hacías sentir. La sonrisa que provocabas cuando me decías algo lindo. De verdad te quiero. Eres hermosa cuando te preocupas por mí, cuando te importaba cómo me sentía; con un simple "mensaje" me hacías sentir bien y tranquilo. No creí que terminaríamos alejados de esta manera, pensé que podíamos durar un poco más... pero me equivoqué. No sé si fue mi culpa, o la razón por la cual hoy no estoy tan presente, o por lo cual no pudimos seguir como antes... 
+pero mis sentimientos no cambian de un día para otro. Te quiero muchísimo y siempre vas a ocupar un espacio en mi vida.
+
+Solo quiero que seas muy feliz y que logres todo aquello que quieres para tu vida, aunque yo ahora no esté a tu lado de la misma forma. No quise alejarme de ti porque quisiera dejarte ir es lo contrario, y aunque fue una de las decisiones más difíciles que he tomado (porque te quiero con todo el corazón), este sentimiento no se borra de la noche a la mañana. Quiero que sepas que esta distancia y el no cruzar casi contacto no es por falta de amor, sino todo lo contrario: a veces amar significa soltar un poco el control y alejarse, aunque duela, aunque el corazón se quede queriendo quedarse.
+
+Me sigo llevando conmigo cada sonrisa, cada palabra y cada recuerdo que compartimos. Nada de eso fue en vano. Gracias por lo que me diste, por lo que me enseñaste y por el amor que compartimos.
+
+Y sí, en este momento estoy así es intentar forzar algo que no se puede. Pero de todo corazón, deseo que se sanen aquellos dolores tuyos que jamás cerraron. Que cumplas todo lo que alguna vez me hablaste y que alcances las metas que teníamos, aun así sea con quien tú elijas en tu camino. Te deseo una vida llena de felicidad, de triunfos y de un amor que pueda hacerte pleno, con la persona que sea realmente el amor de tu vida.
+
+Siempre tendrás un pedacito de mi alma porque, a pesar de todo, estuviste ahí muchas veces. Gracias.`;
+
+document.getElementById('letterBody').textContent = letterText;
+
+function openLetter(e) {
+  document.getElementById('overlay').classList.add('open');
+  // sparkles
+  const emojis = ['✨','💛','🌻','💕','🌸','⭐'];
+  for (let i = 0; i < 14; i++) {
+    setTimeout(() => {
+      const s = document.createElement('div');
+      s.className = 'sparkle-burst';
+      s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      s.style.left = (Math.random()*90+5) + 'vw';
+      s.style.top  = (Math.random()*80+5) + 'vh';
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(), 1000);
+    }, i * 60);
+  }
+}
+
+function closeLetter() {
+  document.getElementById('overlay').classList.remove('open');
+}
+
+document.getElementById('overlay').addEventListener('click', function(e){
+  if (e.target === this) closeLetter();
+});
+
+// ── FALLING SUNFLOWERS ──
+const sunEmojis = ['🌻','🌼','🌸','💛'];
+function spawnSunflower() {
+  const el = document.createElement('div');
+  el.className = 'sunflower';
+  el.textContent = sunEmojis[Math.floor(Math.random()*sunEmojis.length)];
+  el.style.left = Math.random()*100 + 'vw';
+  el.style.fontSize = (22 + Math.random()*20) + 'px';
+  const dur = 5 + Math.random()*7;
+  el.style.animationDuration = dur + 's';
+  el.style.animationDelay = '0s';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), dur*1000 + 200);
+}
+setInterval(spawnSunflower, 600);
+// initial burst
+for (let i=0; i<8; i++) setTimeout(spawnSunflower, i*200);
+
+// ── ANIMALS ──
+const animals = [
+  { emoji:'🦋', anim:'fly',    top: ()=> (5 + Math.random()*35)+'%', dur:18 },
+  { emoji:'🐦', anim:'fly',    top: ()=> (5 + Math.random()*25)+'%', dur:14 },
+  { emoji:'🦜', anim:'fly',    top: ()=> (10+ Math.random()*30)+'%', dur:20 },
+  { emoji:'🐿️', anim:'bounce', top: ()=> (70+ Math.random()*20)+'%', dur:25 },
+  { emoji:'🐇', anim:'bounce', top: ()=> (75+ Math.random()*15)+'%', dur:22 },
+  { emoji:'🦊', anim:'bounce', top: ()=> (72+ Math.random()*18)+'%', dur:28 },
+];
+
+function spawnAnimal() {
+  const a = animals[Math.floor(Math.random()*animals.length)];
+  const el = document.createElement('div');
+  el.className = 'animal animal-' + a.anim;
+  el.textContent = a.emoji;
+  el.style.top = a.top();
+  el.style.fontSize = (28 + Math.random()*14) + 'px';
+  const dur = a.dur + Math.random()*10;
+  el.style.animationDuration = dur + 's';
+  el.style.animationDelay = '0s';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), dur*1000 + 500);
+}
+setInterval(spawnAnimal, 4000);
+for (let i=0; i<3; i++) setTimeout(spawnAnimal, i*1500);
+</script>
+</body>
+</html>
